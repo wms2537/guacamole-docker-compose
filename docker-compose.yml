@@ -105,6 +105,8 @@ services:
       LETSENCRYPT_HOST: HOST # change to youe domain
       LETSENCRYPT_EMAIL: EMAIL # change to youe email
     restart: unless-stopped
+    networks:
+      guacnetwork_compose:
   # guacd
   guacd:
     container_name: guacd_guacamole
@@ -153,6 +155,6 @@ services:
     - guacd
     networks:
       guacnetwork_compose:
-    ports:
-      - 8080/tcp
+    expose:
+      - 8080
     restart: always
