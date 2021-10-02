@@ -83,12 +83,6 @@
 
 version: '2.0'
 
-# networks
-# create a network 'guacnetwork_compose' in mode 'bridged'
-networks:
-  guacnetwork_compose:
-    driver: bridge
-
 # services
 services:
   nginx:
@@ -105,14 +99,10 @@ services:
       LETSENCRYPT_HOST: HOST # change to youe domain
       LETSENCRYPT_EMAIL: EMAIL # change to youe email
     restart: unless-stopped
-    networks:
-      guacnetwork_compose:
   # guacd
   guacd:
     container_name: guacd_guacamole
     image: guacamole/guacd
-    networks:
-      guacnetwork_compose:
     restart: always
     volumes:
     - ./drive:/drive:rw
@@ -125,9 +115,8 @@ services:
       POSTGRES_DB: guacamole_db
       POSTGRES_PASSWORD: ChooseYourOwnPasswordHere1234
       POSTGRES_USER: guacamole_user
+      POSTGRES_INITDB_ARGS: "--auth-host=md5 --auth-local=md5"
     image: postgres
-    networks:
-      guacnetwork_compose:
     restart: always
     volumes:
     - ./init:/docker-entrypoint-initdb.d:ro
@@ -153,8 +142,11 @@ services:
     image: guacamole/guacamole
     links:
     - guacd
-    networks:
-      guacnetwork_compose:
     expose:
       - 8080
     restart: always
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
