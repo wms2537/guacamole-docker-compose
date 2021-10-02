@@ -105,7 +105,6 @@ services:
       LETSENCRYPT_HOST: HOST # change to youe domain
       LETSENCRYPT_EMAIL: EMAIL # change to youe email
     restart: unless-stopped
-    container_name: frp-nginx
   # guacd
   guacd:
     container_name: guacd_guacamole
